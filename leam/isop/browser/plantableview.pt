@@ -1,0 +1,66 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="leam.isop">
+<head>
+    <metal:block metal:fill-slot="javascript_head_slot">
+    <link rel="stylesheet" type="text/css" media="screen" href="++resource++jquery.datatables/media/css/jquery.dataTables.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="++resource++jquery.datatables/extras/TableTools/media/css/TableTools.css">
+
+    <script type="text/javascript" src="++resource++jquery.datatables.js"></script>
+    <script type="text/javascript" src="++resource++jquery.datatables/extras/TableTools/media/js/ZeroClipboard.js"></script>
+    <script type="text/javascript" src="++resource++jquery.datatables/extras/TableTools/media/js/TableTools.js"></script>
+    <script type="text/javascript">jq(document).ready(function() {
+         jq('#plan-table').dataTable({
+           "oLanguage": {
+              "sSearch": "Filter Table",
+              },
+           "sScrollY": "300px",
+           "bPaginate": false
+           });
+         });
+    </script>
+    <style type="text/css">.clear{clear:both}</style>
+    </metal:block>
+</head>
+<body>
+ <metal:content-core fill-slot="content-core">
+  <metal:content-core define-macro="content-core">
+
+  <!--
+    <div id="add-plan-link">
+      <p><a href="#" tal:attributes="href string:${container/absolute_url}/createObject?type_name=Plan">Add New Plan</a></p>
+    </div>
+  -->
+
+    <table id="plan-table">
+      <thead>
+        <tr>
+          <th>Agency</th>
+          <th>Plan Title</th>
+          <th>Plan Type</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+
+      <tbody class="plan-table-body"
+             tal:define="plans python:context.portal_catalog(portal_type='Plan');
+                         toLocalizedTime nocall:context/@@plone/toLocalizedTime;">
+          <tr tal:repeat="plan plans">
+            <td><a href="#" 
+                   tal:attributes="href python:plan.getObject().getAgency().absolute_url();" 
+                   tal:content="python:plan.getObject().getAgency().Title()">Agency</a></td>
+            <td><a href="#"
+                   tal:attributes="href python:plan.getObject().absolute_url();"
+                   tal:content="plan/Title">Title</a></td>
+            <td tal:content="python:plan.getObject().getPlantype()[0]">Type</td>
+            <td tal:content="python:toLocalizedTime(plan.ModificationDate)">Type</td>
+          </tr>
+        </tbody>
+    </table>
+
+  </metal:content-core>
+ </metal:content-core>
+</body>
+</html>

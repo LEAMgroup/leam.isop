@@ -1,0 +1,147 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="leam.isop">
+
+<head>
+  <metal:slot metal:fill-slot="style_slot">
+
+    <link rel="stylesheet" type="text/css"
+          href="++resource++ol_theme/default/style.tidy.css" />
+
+    <style type="text/css"> 
+      div.plan-inset {
+        float: left;
+        max-width: 205px;
+        margin-bottom: 1em;
+      }
+
+      .contact-table td {
+        margin-right: 50px;
+        font-size: 85%;
+        font-weight: bold;
+      }
+      div.map-url {
+        display: none;
+      }
+      div#map {
+        width: 400px;
+        height: 300px;
+      }
+      h3.field-label {
+        margin-top: 1em;
+        font-weight: bold;
+      }
+      #agency-summary {
+        float: right;
+        width: 23%;
+        border: 1px solid;
+        padding: 5px;
+        margin-right: 1em;
+        background-color: #8dc63f;
+        border-radius: 6px;
+        -moz-border-radius: 6px;
+        -webkit-border-radius: 6px;
+      }
+      img.plan-cover {
+        border: 1px solid black;
+      }
+      .protected-plan {
+        font-size: .8em;
+        font-weight: italic;
+      }
+    </style>
+  </metal:slot>
+
+  <!-- various javascript necessary for SimMap support -->
+  <metal:slot metal:fill-slot="javascript_head_slot">
+
+    <!-- code required by simmaps -->
+    <script type="text/javascript"
+            src="http://maps.googleapis.com/maps/api/js?v=3.6&sensor=false">
+    </script>
+    <script type="text/javascript" src="++resource++openlayers.js"></script>
+    <script type="text/javascript" src="++resource++simmap.js"></script>
+
+    <script type="text/javascript">
+      jq(document).ready(function () {
+        simmap.init()
+        });
+    </script>
+  </metal:slot>
+</head>
+
+<body>
+
+  <!-- disable Plone's description -->
+  <metal:slot fill-slot="content-description" />
+
+  <!-- add agency summary view to right column -->
+  <metal:right fill-slot="column_two_slot"> 
+      <div id="agency-summary" tal:content="structure view/agency_summary">
+        Agency
+      </div>
+  </metal:right>
+
+  <metal:content-core fill-slot="content-core">
+    <metal:content-core define-macro="content-core">
+
+      <div class="plan-inset">
+      <a href="#" tal:attributes="href string:${context/homeurl}">
+        <img src="#" title="plan" alt="plan" class="plan-cover"
+        tal:attributes="src string:${context/absolute_url}/cover_mini;
+                        title context/title;
+                        alt context/title;"
+                        />
+      </a>
+      <a href="#" class="discreet"
+         tal:condition="context/downloadable" 
+         tal:attributes="href string:${context/absolute_url}/at_download/document">download</a>
+
+      <p tal:condition="not:context/downloadable" class="protected-plan">
+        plan not available for download
+      </p>
+
+      <div tal:condition="context/contact">
+        <b>Contact:</b>
+        <span tal:replace="context/contact">contact</span>
+      </div>
+
+      <div tal:condition="context/phone">
+        <b>Phone:</b>
+        <span tal:replace="context/phone">phone</span>
+      </div>
+
+      <div tal:condition="context/email">
+        <b>Email:</b>
+        <span tal:replace="context/email">email</span>
+      </div>
+
+    </div>
+
+
+      <!-- Plan Synopsis -->
+      <h3 class="field-label">Plan Synopsis</h3>
+      <div tal:replace="structure context/synopsis">Plan Synopsis</div>
+
+      <!-- Plan Maps -->
+      <div style="clear: both;" id="plan-maps" tal:define="maps view/maps" 
+           tal:condition="maps">
+      <h3 class="field-label">Planning Maps</h3>
+
+        <div id="map" class="olMap">
+          <!-- openlayers map -->
+        </div>
+
+        <div class="map-url" tal:repeat="map maps"
+             tal:content="map/absolute_url" >
+             <!-- URL -->
+        </div>
+      </div>
+
+    </metal:content-core>
+  </metal:content-core>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="leam.isop">
+
+<head>
+  <metal:slot metal:fill-slot="style_slot">
+    <link rel="stylesheet" type="text/css" media="screen" 
+        href="++resource++jquery.datatables/media/css/jquery.dataTables.css" />
+    <link rel="stylesheet" type="text/css" media="screen" 
+          href="++resource++jquery.datatables/extras/TableTools/media/css/TableTools.css" />
+    
+    <style type="text/css">
+      img.agencyrep {
+        margin:5px;
+      }
+      img.planrep {
+        margin: 3px;
+        border:1px solid #000;
+      }
+      .clear{clear:both}
+    </style>
+  </metal:slot>
+
+  <metal:slot metal:fill-slot="javascript_head_slot">
+    <script type="text/javascript" src="++resource++jquery.datatables.js">
+    </script>
+    <script type="text/javascript" src="++resource++jquery.datatables/extras/TableTools/media/js/ZeroClipboard.js"></script>
+    <script type="text/javascript" src="++resource++jquery.datatables/extras/TableTools/media/js/TableTools.js"></script>
+    <script type="text/javascript">jq(document).ready(function() {
+      jq('#agency-table').dataTable({
+        "oLanguage": {
+          "sSearch": "Filter Table",
+          },
+        "sScrollY": "500px",
+        "bPaginate": false,
+        "bSort": true,
+        "bAutoWidth": false,
+        "aoColumnDefs": [
+          { "sWidth": "210px", "aTargets": [0] }, // plan type
+          ],
+        });
+      });
+    </script>
+  </metal:slot>
+</head>
+<body>
+  <metal:content-core fill-slot="content-core">
+    <metal:content-core define-macro="content-core">
+
+    <!-- Disable New Plan button for now
+    <div id="add-plan-link">
+      <p><a href="#" tal:attributes="href string:${container/absolute_url}/createObject?type_name=Plan">Add New Plan</a></p>
+    </div>
+    -->
+
+    <div tal:content="structure view/getAgencyTable">TABLE</div>
+
+    </metal:content-core>
+  </metal:content-core>
+</body>
+</html>

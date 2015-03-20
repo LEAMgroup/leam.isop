@@ -1,0 +1,53 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="leam.isop">
+
+  <include package="plone.app.contentmenu" />
+  <include package="plone.app.z3cform" />
+
+  <!-- -*- extra stuff goes here -*- -->
+
+  <browser:page
+      for="*"
+      name="All Agencies"
+      class=".agencytableview.agencytableView"
+      template="agencytableview.pt"
+      allowed_interface=".agencytableview.IagencytableView"
+      permission="zope.Public"
+      />
+
+  <browser:page
+      for="*"
+      name="All Plans"
+      class=".plantableview.PlanTableView"
+      template="plantableview.pt"
+      allowed_interface=".plantableview.IPlanTableView"
+      permission="zope.Public"
+      />
+
+  <browser:page
+      for="*"
+      name="agency_view"
+      class=".agencyview.AgencyView"
+      template="agencyview.pt"
+      allowed_interface=".agencyview.IAgencyView"
+      permission="zope.Public"
+      />
+
+  <browser:page
+      for="*"
+      name="plan_view"
+      class=".planview.PlanView"
+      template="planview.pt"
+      allowed_interface=".planview.IPlanView"
+      permission="zope.Public"
+      />
+
+    <browser:resource
+        name="jquery.dataTables.min.js"
+        file="jquery.dataTables.min.js"
+        />
+
+
+</configure>

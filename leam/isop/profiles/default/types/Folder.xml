@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<object name="Folder">
+ <property name="view_methods" purge="False">
+  <element name="All Plans" value="All Plans"/>
+  <element name="All Agencies" value="All Agencies"/>
+ </property>
+</object>

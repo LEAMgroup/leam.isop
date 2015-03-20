@@ -1,0 +1,184 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="leam.isop">
+<head>
+
+    <metal:slot metal:fill-slot="style_slot">
+      <link rel="stylesheet" type="text/css" media="screen" href="++resource++jquery.datatables/media/css/jquery.dataTables.css">
+      <link rel="stylesheet" type="text/css" media="screen" href="++resource++jquery.datatables/extras/TableTools/media/css/TableTools.css">
+
+      <link rel="stylesheet" 
+            href="++resource++ol_theme/default/style.tidy.css" 
+            type="text/css" />
+
+      <style>
+        div.synopsis {
+          max-height: 6em;
+          overflow: hidden;
+        }
+        div.map-url {
+          display: none;
+        }
+        div#map {
+          width: 400px;
+          height: 400px;
+        }
+        img.planrep { 
+          border: 1px solid #000;
+        }
+
+        div.field-label {
+          float: left;
+          width: 10%;
+          font-weight: bold;
+          font-size: 120%;
+          color: #444;
+        }
+
+        td.plantype {
+          font-weight: bold;
+        }
+      </style>
+    </metal:slot>
+
+    <!-- various javascript necessary for SimMap support -->
+    <metal:block metal:fill-slot="javascript_head_slot">
+
+      <!-- code required by simmaps -->
+      <script type="text/javascript"
+              src="http://maps.googleapis.com/maps/api/js?v=3.6&sensor=false">
+      </script>
+      <script type="text/javascript" src="++resource++openlayers.js"></script>
+      <script type="text/javascript" src="++resource++simmap.js"></script>
+
+      <script type="text/javascript">
+        jq(document).ready(function () {
+            simmap.init()
+            });
+      </script>
+
+      <!-- code required by datatables -->
+      <script type="text/javascript" 
+              src="++resource++jquery.datatables.js"></script>
+      <script type="text/javascript" 
+              src="++resource++jquery.datatables/extras/TableTools/media/js/ZeroClipboard.js"></script>
+      <script type="text/javascript" 
+              src="++resource++jquery.datatables/extras/TableTools/media/js/TableTools.js"></script>
+
+      <script type="text/javascript">
+        jq(document).ready(function() {
+          jq('#agency-plan-table').dataTable({
+            "oLanguage": {
+                 "sSearch": "Filter Table",
+                 },
+            "bAutoWidth": false,
+            "aoColumnDefs": [
+                { "sWidth": "15%", "aTargets": [0]},
+                { "sWidth": "10%", "aTargets": [1]},
+                { "sWidth": "20%", "aTargets": [2]},
+                { "sWidth": "55%", "aTargets": [3]},
+                ]
+            });
+        });
+      </script>
+
+    </metal:block>
+</head>
+
+<body>
+  <metal:content-title fill-slot="content-title">
+    <metal:content-title define-macro="content-title">
+
+      <img tal:condition="context/logo" 
+           tal:attributes="src context/logo/absolute_url;
+                           title context/Title;
+                           alt context/Title;
+                           width context/logo/width;
+                           height context/logo/height;" />
+      <h1 tal:condition="not:context/logo" 
+          tal:content="context/title" class="documentHeading">
+          Title
+      </h1>
+    </metal:content-title>
+  </metal:content-title>
+
+  <metal:content-core fill-slot="content-core">
+    <metal:content-core define-macro="content-core">
+
+    <div style="margin-top: 1.5em" tal:condition="context/website">
+      <div class="field-label">Web Site</div>
+      <a href="#" tal:attributes="href context/website" 
+        tal:content="context/website"> web site</a>
+    </div>
+
+    <div tal:condition="context/address">
+      <div class="field-label">Address</div>
+      <blockquote tal:content="context/address">address</blockquote>
+    </div>
+
+    <div tal:condition="context/phone">
+      <div class="field-label">Phone</div>
+      <p tal:content="context/phone">phone</p>
+    </div>
+
+    <div style="margin-top: 1.5em" tal:condition="context/overview">
+      <h3 style="margin-top: 1.5em">Overview</h3>
+      <p tal:content="structure context/overview">overview</p>
+    </div>
+
+    <h3 style="margin-top: 1.5em; margin-bottom: .5em">Available Plans</h3>
+    <table id="agency-plan-table">
+      <thead>
+        <tr>
+          <th>Plan Type</th>
+          <th>Cover Page</th>
+          <th>Title</th>
+          <th>Synopsis</th>
+        </tr>
+      </thead>
+      <tbody tal:define="plans python:view.plans();">
+        <tr tal:repeat="plan plans">
+          <td class="plantype" 
+              tal:content="python:plan.getObject().getPlantype()[0]">Type
+          </td>
+          <td>
+            <img src="#" class="planrep" 
+                 tal:attributes="src string:${plan/getURL}/cover_tile"/>
+          </td>
+          <td><a href="#" 
+                 tal:attributes="href plan/getURL" 
+                 tal:content="plan/Title">Title</a>
+          </td>
+          <td>
+            <div class="synopsis" tal:content="structure python:plan.getObject().getSynopsis()">
+              Synopsis
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div id="map-area" tal:conditional="context/layer">
+      <h3 style="margin-top: 4em;">Default Planning Area</h3>
+      <p>This map shows the default area used when new plans are uploaded
+         to the Plan Library.  A customized or more detailed map may be
+         selected to replace this map if one is available. 
+      </p>
+      
+      <div id="map" class="olMap">
+        <!-- openlayers map -->
+      </div>
+
+      <div class="map-url" tal:repeat="map view/maps"
+           tal:content="map/absolute_url">
+           <!-- URL -->
+      </div>
+    </div>
+
+    </metal:content-core>
+  </metal:content-core>
+</body>
+</html>

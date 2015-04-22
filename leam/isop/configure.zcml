@@ -1,0 +1,111 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="leam.isop">
+
+  <!-- Include configuration for dependencies listed in setup.py -->
+  <includeDependencies package="." />
+
+  <include package="plone.app.relationfield" />
+
+  <!-- Register a resource directory from which we can deploy static
+   resource files. -->
+  <browser:resourceDirectory
+    name="leam.isop"
+    directory="resources" />
+
+  <i18n:registerTranslations directory="locales" />
+
+  <!-- Register an extension profile to make the product installable
+       in Plone -->
+  <genericsetup:registerProfile
+      name="default"
+      title="Integrated System of Plans"
+      directory="profiles/default"
+      description="Extension profile for Integrated System of Plans"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
+
+  <!-- -*- extra stuff goes here -*- -->
+    <class class=".plan.Plan">
+        <implements interface=".plan.IPlan" />
+    </class>
+
+    <browser:page
+        name="planview"
+        for=".plan.IPlan"
+        class=".plan.PlanView"
+        template="plan_templates/planview.pt"
+        permission="zope2.View"
+        />
+
+    <browser:page
+        name="summary"
+        for=".plan.IPlan"
+        class=".plan.SummaryView"
+        template="plan_templates/summary.pt"
+        permission="zope2.View"
+        />
+
+    <class class=".agency.Agency">
+        <implements interface=".agency.IAgency" />
+    </class>
+
+    <browser:page
+        name="agencyview"
+        for=".agency.IAgency"
+        class=".agency.AgencyView"
+        template="agency_templates/agencyview.pt"
+        permission="zope2.View"
+        />
+
+    <browser:page
+        name="add-plan"
+        for=".agency.IAgency"
+        class=".agency.addPlan"
+        permission="zope2.View"
+        />
+
+    <browser:page
+        name="add-layer"
+        for=".agency.IAgency"
+        class=".agency.addLayer"
+        permission="zope2.View"
+        />
+
+    <browser:page
+        name="agencylist"
+        for="*"
+        class=".folder.AgencyList"
+        template="folder_templates/agencylist.pt"
+        permission="zope2.View"
+        />
+
+    <browser:page
+        name="agencystats"
+        for="*"
+        class=".agency.AgencyStats"
+        permission="zope2.View"
+        />
+
+    <browser:page
+        name="agencymaps"
+        for="*"
+        class=".folder.AgencyMapView"
+        template="folder_templates/agencymaps.pt"
+        permission="zope2.View"
+        />
+
+    <browser:viewlet
+        name="leam.simmap.viewlet"
+        for=".agency.IAgency"
+        manager="plone.app.layout.viewlets.interfaces.IAboveTitle"
+        class="leam.simmap.viewlets.SimMapViewlet"
+        permission="zope2.View"
+        />
+
+</configure>

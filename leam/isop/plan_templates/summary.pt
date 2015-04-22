@@ -1,0 +1,19 @@
+
+<tal:comment tal:condition="nothing">
+    This is a plan summary view that meant to be used as part of an
+    agency view.
+</tal:comment>
+
+<div class="plan-summary" tal:define="url context/absolute_url;">
+  <a href="#" class="view" 
+    tal:attributes="href string:${url}/@@download/document"
+    tal:content="context/Title">Title inserted here</a>
+  <div class="actions">
+    <a href="#" tal:attributes="href string:${url}/@@download/document">
+      download</a>
+    <a href="#" tal:attributes="href string:${url}/edit">update</a>
+    <a href="#" class="link-overlay"
+      tal:attributes="href string:${url}/delete_confirmation">delete</a>
+  </div>
+</div>
+

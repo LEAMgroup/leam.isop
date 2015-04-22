@@ -1,0 +1,17 @@
+leam.isop Installation
+----------------------
+
+To install leam.isop using zc.buildout and the plone.recipe.zope2instance
+recipe to manage your project, you can do this:
+
+* Add ``leam.isop`` to the list of eggs to install, e.g.:
+
+    [buildout]
+    ...
+    eggs =
+        ...
+        leam.isop
+       
+* Re-run buildout, e.g. with:
+
+    $ ./bin/buildout

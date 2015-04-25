@@ -10,35 +10,45 @@
     This is the default view for the Agency class.
 </tal:comment>
 
+<metal:slot fill-slot="style_slot">
+  <link rel="stylesheet" class="required"
+        href="http://openlayers.org/en/v3.4.0/css/ol.css" >
+  <link rel="stylesheet" class="required"
+        tal:define="navroot context/@@plone_portal_state/navigation_root_url"
+        tal:attributes="href string:${navroot}/++resource++leam.isop/isop.css">
+</metal:slot>
+
 <metal:slot fill-slot="javascript_head_slot">
   <script src="++resource++leam.isop/dropzone.js"
           type="text/javascript"></script>
 </metal:slot>
 
-
 <body>
 
-<!--
 <metal:slot fill-slot="content-title">
   <metal:content-title define-macro="content-title">
+    <!--
     <img src="#" class="logo" tal:condition="context/logo" 
       tal:attributes="src context/logo;" />
-    <h1 class=documentFirstHeading" tal:content="context/title">Title</h1>
+    -->
+    <div id="parent-fieldname-title" class="documentFirstHeading" 
+        style="display:inline;">
+      <h3 style="text-align: left;  display: inline; color: #428BCA;"
+          tal:content="context/title">
+          Agency Title</h3>
+      <h4 style="text-align: left;  display: inline; color: #428BCA;">
+          PLAN LIBRARY</h4>
+    </div>
   </metal:content-title>
 </metal:slot>
--->
 
-<!--
 <metal:slot fill-slot="content-description">
   <metal:content-description define-macro="content-description">
   </metal:content-description>
 </metal:slot>
--->
 
 <metal:slot fill-slot="content-core">
   <metal:content-core define-macro="content-core">
-
-  <div id="map">MAP</div>
 
   <div tal:repeat="x python:view.w.keys()" tal:content="x">sdf</div>
 
@@ -62,6 +72,8 @@
     <div class="dz-message">Drop a GIS layer (or click) to add a new map.</div>
   </div>
 
+  <script type="text/javascript" src="++resource++leam.isop/agencymap.js">
+  </script>
   <script type="text/javascript">
     var plans = new Dropzone("div#add-plan", {
         url: "add-plan",

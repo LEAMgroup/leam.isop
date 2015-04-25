@@ -103,8 +103,16 @@
     <browser:viewlet
         name="leam.simmap.viewlet"
         for=".agency.IAgency"
-        manager="plone.app.layout.viewlets.interfaces.IAboveTitle"
-        class="leam.simmap.viewlets.SimMapViewlet"
+        manager="plone.app.layout.viewlets.interfaces.IAboveContentTitle"
+        class="leam.simmap.viewlets.viewlets.SimMapViewlet"
+        permission="zope2.View"
+        />
+
+    <browser:viewlet
+        name="leam.simmap.htmlhead"
+        for=".agency.IAgency"
+        manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
+        class="leam.simmap.viewlets.viewlets.SimMapHtmlHeadViewlet"
         permission="zope2.View"
         />
 

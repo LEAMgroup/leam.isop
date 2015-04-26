@@ -7,7 +7,9 @@
       i18n:domain="leam.isop">
 
 <tal:comment tal:condition="nothing">
-    This is the default view for the Agency class.
+This is the default view for the Agency class.
+
+Warning! This template assumes that bootstrap 3 grid system is available.
 </tal:comment>
 
 <metal:slot fill-slot="style_slot">
@@ -27,17 +29,13 @@
 
 <metal:slot fill-slot="content-title">
   <metal:content-title define-macro="content-title">
-    <!--
-    <img src="#" class="logo" tal:condition="context/logo" 
-      tal:attributes="src context/logo;" />
-    -->
-    <div id="parent-fieldname-title" class="documentFirstHeading" 
-        style="display:inline;">
-      <h3 style="text-align: left;  display: inline; color: #428BCA;"
-          tal:content="context/title">
-          Agency Title</h3>
-      <h4 style="text-align: left;  display: inline; color: #428BCA;">
-          PLAN LIBRARY</h4>
+    <div class="row top-margin-20">
+      <div class="span12">
+        <h3 class="documentFirstHeading" style="color: #428BCA;">
+          <span tal:replace="context/title">Agency Title</span>
+          <small>PLAN LIBRARY</small>
+        </h3>
+      </div>
     </div>
   </metal:content-title>
 </metal:slot>
@@ -50,27 +48,79 @@
 <metal:slot fill-slot="content-core">
   <metal:content-core define-macro="content-core">
 
-  <div tal:repeat="x python:view.w.keys()" tal:content="x">sdf</div>
+    <div class="row top-margin-20">
+      <div class="span6">
+        <div class="row">
+          <div class="span2"><h4>Web Site</h4></div>
+          <div class="span4">
+            <a tal:attributes="href context/website"
+              tal:content="context/website">http://localhost/dev</a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="span2"><h4>Address</h4></div>
+          <div class="span4"><p>210 somwhere<br>Manhattan KS 61820</p></div>
+        </div>
+        <div class="row">
+          <div class="span2"><h4>Phone</h4></div>
+          <div class="span4"><p>555-555-5555</p></div>
+        </div>
+        <div class="row">
+          <div class="span2"><h4>Overview</h4></div>
+          <div class="span4"><p>This is a large amount of text that describes
+            the necessary stuff about the agency. Not sure this is useful or
+            will be completed in a comprehensive manner by end users.</p>
+          </div>
+        </div>
+      </div>
 
-  <h3>Plans</h3>
+      <!-- right column -->
+      <div class="span6">
 
-  <div tal:repeat="p view/plans">
-    <div tal:replace="structure p/@@summary"></div>
-  </div>
+        <!-- existing plans -->
+        <div class="row">
+          <div class="span2"><h4>Plan Type</h4></div>
+          <div class="span3"><h4>Title</h4></div>
+        </div>
+        <div class="row" tal:repeat="p view/plans">
+          <div class="span2"><p tal:content="p/plantype">Type</p></div>
+          <div class="span3" ><p tal:content="p/title">Title</p></div>
+          <div class="span1">
+            <button id="synopsis" class="buttonS">Synopsis</button>
+          </div>
+          <div class="span1">
+            <button id="download" class="buttonFP">Download</button>
+          </div>
+        </div>
 
-  <div id="add-plan" class="dropzone-previews">
-    <div class="dz-message">Drop a PDF (or click) to add a new plan.</div>
-  </div>
+        <!-- dropzone for new plans -->
+        <div class="row top-margin-05">
+          <div id="add-plan" class="span6 dropzone-previews">
+            <div class="dz-message">
+              Drop a PDF (or click) to add a new plan.</div>
+          </div>
+        </div>
 
-  <h3>Maps</h3>
+        <!-- existing maps -->
+        <div class="row top-margin-10">
+          <div class="span2"><h4>GIS Type</h4></div>
+          <div class="span3"><h4>Title</h4></div>
+        </div>
+        <div class="row" tal:repeat="m view/maps">
+          <div class="span2"><p>Layer</p></div>
+          <div class="span3"><p tal:content="m/title">Layer</p></div>
+        </div>
+  
+        <!-- dropzone for new layers -->
+        <div class="row top-margin-05">
+          <div id="add-layer" class="span6 dropzone-previews">
+            <div class="dz-message">
+              Drop a GIS layer (or click) to add a new map.</div>
+          </div>
+        </div>
 
-  <div tal:repeat="m view/maps">
-    <div tal:replace="structure m/@@row"></div>
-  </div>
-
-  <div id="add-layer" class="dropzone-previews">
-    <div class="dz-message">Drop a GIS layer (or click) to add a new map.</div>
-  </div>
+      </div> <!-- end right column -->
+    </div>
 
   <script type="text/javascript" src="++resource++leam.isop/agencymap.js">
   </script>

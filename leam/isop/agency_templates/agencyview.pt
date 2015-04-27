@@ -53,23 +53,33 @@ Warning! This template assumes that bootstrap 3 grid system is available.
         <div class="row">
           <div class="span2"><h4>Web Site</h4></div>
           <div class="span4">
-            <a tal:attributes="href context/website"
-              tal:content="context/website">http://localhost/dev</a>
+            <p><a tal:attributes="href context/website"
+              tal:content="context/website">http://localhost/dev</a></p>
           </div>
         </div>
         <div class="row">
           <div class="span2"><h4>Address</h4></div>
-          <div class="span4"><p>210 somwhere<br>Manhattan KS 61820</p></div>
+          <div class="span4"><p><span tal:replace="context/address">
+              street address</span><br>
+            <span tal:replace="context/city">City</span>, 
+            <span tal:replace="context/state">XX </span>
+            <span tal:replace="context/zipcode">99999</span>
+            </p></div>
         </div>
         <div class="row">
           <div class="span2"><h4>Phone</h4></div>
-          <div class="span4"><p>555-555-5555</p></div>
+          <div class="span4"><p tal:content="context/phone">
+            555-555-5555</p></div>
         </div>
         <div class="row">
+          <div class="span2"><h4>Email</h4></div>
+          <div class="span4"><p tal:content="context/email">
+            info@agency.gov</p></div>
+        </div>
+        <div class="row" tal:condition="nocall:context/overview">
           <div class="span2"><h4>Overview</h4></div>
-          <div class="span4"><p>This is a large amount of text that describes
-            the necessary stuff about the agency. Not sure this is useful or
-            will be completed in a comprehensive manner by end users.</p>
+          <div class="span4">
+            <div tal:replace="structure context/overview/output">overview</div>
           </div>
         </div>
       </div>
@@ -80,11 +90,11 @@ Warning! This template assumes that bootstrap 3 grid system is available.
         <!-- existing plans -->
         <div class="row">
           <div class="span2"><h4>Plan Type</h4></div>
-          <div class="span3"><h4>Title</h4></div>
+          <div class="span2"><h4>Title</h4></div>
         </div>
         <div class="row" tal:repeat="p view/plans">
           <div class="span2"><p tal:content="p/plantype">Type</p></div>
-          <div class="span3" ><p tal:content="p/title">Title</p></div>
+          <div class="span2" ><p tal:content="p/title">Title</p></div>
           <div class="span1">
             <button id="synopsis" class="buttonS">Synopsis</button>
           </div>
@@ -122,34 +132,26 @@ Warning! This template assumes that bootstrap 3 grid system is available.
       </div> <!-- end right column -->
     </div>
 
-  <script type="text/javascript" src="++resource++leam.isop/agencymap.js">
-  </script>
-  <script type="text/javascript">
-    var plans = new Dropzone("div#add-plan", {
-        url: "add-plan",
-        previewsContainer: "#add-plan",
-        maxFiles:1,
-        acceptedFiles:"application/pdf",
-        init: function() {
-          this.on("complete", function(file) {
-            console.debug("plan upload complete");
-            window.location = file.xhr.responseURL;
-            });
-          },
-        });
+    <div class="params" style="display: none">
+      <div id="param-lat" tal:content="context/latitude">38.332</div>
+      <div id="param-long" tal:content="context/longitude">-98.332</div>
+      <div id="param-url" 
+        tal:content="string:${context/absolute_url}/@@display-file/boundary">
+      </div>
+    </div>
 
-    var layers = new Dropzone("div#add-layer", {
-        url: "add-layer",
-        previewsContainer: "#add-layer",
-        maxFiles:1,
-        init: function() {
-          this.on("complete", function(file) {
-            console.debug("layer upload complete");
-            window.location = file.xhr.responseURL;
-            });
-          },
-        });
-  </script>
+    <script type="text/javascript" 
+        src="++resource++leam.isop/agencymap.js"></script>
+    <script type="text/javascript"
+        src="++resource++leam.isop/agency_dropzone.js"></script>
+    <script type="text/javascript">
+
+      map.getView().setCenter( getLongLat() );
+      map.getView().setZoom(8);
+      map.addLayer( getBoundary() );
+      map.addLayer( getAgencyLayer() );
+
+    </script>
 
   </metal:content-core>
 </metal:slot>

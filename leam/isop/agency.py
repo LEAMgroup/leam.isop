@@ -5,6 +5,7 @@ from z3c.form import group, field
 from zope import schema
 from zope.interface import implements
 from zope.interface import invariant, Invalid
+from zope.security import checkPermission
 from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from Acquisition import aq_inner
@@ -97,6 +98,24 @@ class Agency(Container):
         except IndexError:
             return "0.0"
 
+    def plan_count(self):
+        """ return the number of primary plans in the agency """
+
+        results = api.content.find(context=self, object_provides=IPlan)
+        ptypes = set([p.getObject().plantype for p in results])
+        try:
+            ptypes.remove('Other')
+        except KeyError:
+            pass
+
+        return len(ptypes)
+
+    def map_count(self):
+        """ return the number of maps in the agency """
+
+        results = api.content.find(context=self, object_provides=ISimMap)
+        return len(results)
+
 
 
 class addPlan(BrowserView):
@@ -154,6 +173,9 @@ class AgencyView(DefaultView):
                     '@@summary').render()
         else:
             return ''
+
+    def canManage(self):
+            return checkPermission('cmf.AddPortalContent', self.context)
 
     def plans(self):
         """ return all plans in the agency """

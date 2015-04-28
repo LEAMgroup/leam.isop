@@ -78,14 +78,6 @@
         />
 
     <browser:page
-        name="agencylist"
-        for="*"
-        class=".folder.AgencyList"
-        template="folder_templates/agencylist.pt"
-        permission="zope2.View"
-        />
-
-    <browser:page
         name="agencystats"
         for="*"
         class=".agency.AgencyStats"

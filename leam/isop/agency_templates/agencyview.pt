@@ -104,7 +104,7 @@ Warning! This template assumes that bootstrap 3 grid system is available.
         </div>
 
         <!-- dropzone for new plans -->
-        <div class="row top-margin-05">
+        <div class="row top-margin-05" tal:condition="view/canManage">
           <div id="add-plan" class="span6 dropzone-previews">
             <div class="dz-message">
               Drop a PDF (or click) to add a new plan.</div>
@@ -122,7 +122,7 @@ Warning! This template assumes that bootstrap 3 grid system is available.
         </div>
   
         <!-- dropzone for new layers -->
-        <div class="row top-margin-05">
+        <div class="row top-margin-05" tal:condition="view/canManage">
           <div id="add-layer" class="span6 dropzone-previews">
             <div class="dz-message">
               Drop a GIS layer (or click) to add a new map.</div>

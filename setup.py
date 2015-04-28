@@ -26,6 +26,7 @@ setup(name='leam.isop',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'geojson',
           'plone.app.dexterity [relations]',
           'plone.app.relationfield',
           'plone.namedfile [blobs]',

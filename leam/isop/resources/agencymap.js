@@ -80,3 +80,45 @@ function getAgencyLayer() {
 
   return layer;
 };
+
+/*
+ *
+ */
+function initControlPanel(layer) {
+
+  var agencyList = function() {
+    var panel = document.createDocumentFragment();
+    var table = document.createElement("table");
+    table.setAttribute("class", "agency-control");
+    panel.appendChild(table);
+
+    var features = this.getFeatures();
+    for (var i=0; i<features.length; i++) {
+      console.log(features[i].get('NAMELSAD10'));
+      var arr = [
+        '<a href="blah" class="agency-name">' + 
+             features[i].get('NAMELSAD10') + "</a>",
+        features[i].get('AffordOwn') + " of 5",
+        features[i].get('AffordRent'),
+      ];
+      var row = document.createElement("tr");
+      row.innerHTML = "<td>" + arr.join("</td><td>") + "</td>";
+      table.appendChild(row);
+    };
+    document.getElementById('controlp').appendChild(panel);
+  };
+
+  var controlPanel = function(opt_options) {
+  
+    var options = opt_options || {};
+    var element = document.getElementById('controlp')
+    var this_ = this;
+
+    ol.control.Control.call(this, {
+      element: element,
+      target: options.target,
+    });
+
+  };
+  ol.inherits(controlPanel, ol.control.Control);
+

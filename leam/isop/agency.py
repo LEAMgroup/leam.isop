@@ -87,16 +87,16 @@ class Agency(Container):
     @property
     def latitude(self):
         try:
-            return self.location.split(',')[0].strip()
-        except IndexError:
-            return "0.0"
+            return float(self.location.split(',')[0].strip())
+        except AttributeError, IndexError:
+            return 0.0
 
     @property
     def longitude(self):
         try:
-            return self.location.split(',')[1].strip()
-        except IndexError:
-            return "0.0"
+            return float(self.location.split(',')[1].strip())
+        except AttributeError, IndexError:
+            return 0.0
 
     def plan_count(self):
         """ return the number of primary plans in the agency """

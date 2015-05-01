@@ -1,4 +1,4 @@
-from geojson import Point, Feature, FeatureCollection
+from geojson import dumps, Point, Feature, FeatureCollection
 
 from plone import api
 from Products.Five import BrowserView
@@ -29,3 +29,17 @@ class AgencyLocations(BrowserView):
                 object_provides=IAgency)
         return [p.getObject() for p in results]
 
+
+    def __call__(self):
+        features = []
+        for i, obj in enumerate(self.agencies()):
+            pt = Point((obj.longitude, obj.latitude))
+            props = dict(name=obj.title, url=obj.absolute_url(),
+                    plans=obj.plan_count(), maps=obj.map_count())
+            features.append(Feature(id=i, geometry=pt, properties=props))
+
+        self.request.response.setHeader('Content-Type', 'application/json')
+        if features:
+            return dumps(FeatureCollection(features))
+        else:
+            return dumps({})

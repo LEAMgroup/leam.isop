@@ -96,10 +96,27 @@ Warning! This template assumes that bootstrap 3 grid system is available.
           <div class="span2"><p tal:content="p/plantype">Type</p></div>
           <div class="span2" ><p tal:content="p/title">Title</p></div>
           <div class="span1">
-            <button id="synopsis" class="buttonS">Synopsis</button>
+            <a href="#" tal:attributes="href string: #${p/id};" role="button" 
+              class="btn btn-sm btn-default" data-toggle="modal">Synopsis</a>
+            <div id="#" tal:attributes="id p/id;" 
+              class="modal fade">
+              <div class="modal-dialog">
+                <div class=modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" 
+                      data-dismiss="modal" aria-hidden="true">&times;</button>
+                  </div>
+                  <div class="modal-body" tal:content="structure p/overview">
+                    synopsis
+                  </div>
+                </div> <!-- .modal-content -->
+              </div> <!-- .modal-dialog -->
+            </div> <!-- .modal -->
           </div>
           <div class="span1">
-            <button id="download" class="buttonFP">Download</button>
+            <a href="" role="button" class="btn btn-xs btn-primary"
+            tal:attributes="href string:${p/absolute_url}/@@download/document;"
+              data-toggle="modal">Download</a>
           </div>
         </div>
 

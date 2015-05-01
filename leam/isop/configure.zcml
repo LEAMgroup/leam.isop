@@ -92,6 +92,13 @@
         permission="zope2.View"
         />
 
+    <browser:page
+        name="agencylocs"
+        for="*"
+        class=".folder.AgencyLocations"
+        permission="zope2.View"
+        />
+
     <browser:viewlet
         name="leam.simmap.viewlet"
         for=".agency.IAgency"

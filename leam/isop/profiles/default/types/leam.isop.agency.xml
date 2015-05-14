@@ -4,9 +4,9 @@
    i18n:domain="leam.isop" xmlns:i18n="http://xml.zope.org/namespaces/i18n">
 
   <!-- Basic metadata -->
-  <property name="title" i18n:translate="">Agency</property>
+  <property name="title" i18n:translate="">Partner</property>
   <property name="description"
-    i18n:translate="">Planning Agency</property>
+    i18n:translate="">Partner organization or agency</property>
   <property name="icon_expr">string:${portal_url}/folder_icon.png</property>
   <property name="factory">leam.isop.agency</property>
   <property name="global_allow">True</property>

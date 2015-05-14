@@ -197,7 +197,7 @@ class AgencyStats(BrowserView):
         return len(api.content.find(context=context, object_provides=IPlan))
 
     def __call__(self):
-        import pdb; pdb.set_trace()
+        #import pdb; pdb.set_trace()
 
         stats = []
         agencies = api.content.find(context=api.portal.get(),

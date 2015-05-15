@@ -30,7 +30,7 @@ Warning! This template assumes that bootstrap 3 grid system is available.
 <metal:slot fill-slot="content-title">
   <metal:content-title define-macro="content-title">
     <div class="row top-margin-20">
-      <div class="span12">
+      <div class="col-md-12">
         <h3 class="documentFirstHeading" style="color: #428BCA;">
           <span tal:replace="context/title">Agency Title</span>
           <small>PLAN LIBRARY</small>
@@ -49,17 +49,17 @@ Warning! This template assumes that bootstrap 3 grid system is available.
   <metal:content-core define-macro="content-core">
 
     <div class="row top-margin-20">
-      <div class="span6">
+      <div class="col-md-6">
         <div class="row">
-          <div class="span2"><h4>Web Site</h4></div>
-          <div class="span4">
+          <div class="col-md-2"><h4>Web Site</h4></div>
+          <div class="col-md-4">
             <p><a tal:attributes="href context/website"
               tal:content="context/website">http://localhost/dev</a></p>
           </div>
         </div>
         <div class="row">
-          <div class="span2"><h4>Address</h4></div>
-          <div class="span4"><p><span tal:replace="context/address">
+          <div class="col-md-2"><h4>Address</h4></div>
+          <div class="col-md-4"><p><span tal:replace="context/address">
               street address</span><br>
             <span tal:replace="context/city">City</span>, 
             <span tal:replace="context/state">XX </span>
@@ -67,35 +67,35 @@ Warning! This template assumes that bootstrap 3 grid system is available.
             </p></div>
         </div>
         <div class="row">
-          <div class="span2"><h4>Phone</h4></div>
-          <div class="span4"><p tal:content="context/phone">
+          <div class="col-md-2"><h4>Phone</h4></div>
+          <div class="col-md-4"><p tal:content="context/phone">
             555-555-5555</p></div>
         </div>
         <div class="row">
-          <div class="span2"><h4>Email</h4></div>
-          <div class="span4"><p tal:content="context/email">
+          <div class="col-md-2"><h4>Email</h4></div>
+          <div class="col-md-4"><p tal:content="context/email">
             info@agency.gov</p></div>
         </div>
         <div class="row" tal:condition="nocall:context/overview">
-          <div class="span2"><h4>Overview</h4></div>
-          <div class="span4">
+          <div class="col-md-2"><h4>Overview</h4></div>
+          <div class="col-md-4">
             <div tal:replace="structure context/overview/output">overview</div>
           </div>
         </div>
       </div>
 
       <!-- right column -->
-      <div class="span6">
+      <div class="col-md-6">
 
         <!-- existing plans -->
         <div class="row">
-          <div class="span2"><h4>Plan Type</h4></div>
-          <div class="span2"><h4>Title</h4></div>
+          <div class="col-md-2"><h4>Plan Type</h4></div>
+          <div class="col-md-2"><h4>Title</h4></div>
         </div>
         <div class="row" tal:repeat="p view/plans">
-          <div class="span2"><p tal:content="p/plantype">Type</p></div>
-          <div class="span2" ><p tal:content="p/title">Title</p></div>
-          <div class="span1">
+          <div class="col-md-2"><p tal:content="p/plantype">Type</p></div>
+          <div class="col-md-2" ><p tal:content="p/title">Title</p></div>
+          <div class="col-md-1">
             <a href="#" tal:attributes="href string: #${p/id};" role="button" 
               class="btn btn-sm btn-default" data-toggle="modal">Synopsis</a>
             <div id="#" tal:attributes="id p/id;" 
@@ -113,7 +113,7 @@ Warning! This template assumes that bootstrap 3 grid system is available.
               </div> <!-- .modal-dialog -->
             </div> <!-- .modal -->
           </div>
-          <div class="span1">
+          <div class="col-md-1">
             <a href="" role="button" class="btn btn-xs btn-primary"
             tal:attributes="href string:${p/absolute_url}/@@download/document;"
               data-toggle="modal">Download</a>
@@ -122,7 +122,7 @@ Warning! This template assumes that bootstrap 3 grid system is available.
 
         <!-- dropzone for new plans -->
         <div class="row top-margin-05" tal:condition="view/canManage">
-          <div id="add-plan" class="span6 dropzone-previews">
+          <div id="add-plan" class="col-md-6 dropzone-previews">
             <div class="dz-message">
               Drop a PDF (or click) to add a new plan.</div>
           </div>
@@ -130,17 +130,17 @@ Warning! This template assumes that bootstrap 3 grid system is available.
 
         <!-- existing maps -->
         <div class="row top-margin-10">
-          <div class="span2"><h4>GIS Type</h4></div>
-          <div class="span3"><h4>Title</h4></div>
+          <div class="col-md-2"><h4>GIS Type</h4></div>
+          <div class="col-md-3"><h4>Title</h4></div>
         </div>
         <div class="row" tal:repeat="m view/maps">
-          <div class="span2"><p>Layer</p></div>
-          <div class="span3"><p tal:content="m/title">Layer</p></div>
+          <div class="col-md-2"><p>Layer</p></div>
+          <div class="col-md-3"><p tal:content="m/title">Layer</p></div>
         </div>
   
         <!-- dropzone for new layers -->
         <div class="row top-margin-05" tal:condition="view/canManage">
-          <div id="add-layer" class="span6 dropzone-previews">
+          <div id="add-layer" class="col-md-6 dropzone-previews">
             <div class="dz-message">
               Drop a GIS layer (or click) to add a new map.</div>
           </div>

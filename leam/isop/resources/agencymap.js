@@ -1,4 +1,3 @@
-
 var map = new ol.Map({
   target: 'map',
   layers: [
@@ -121,4 +120,4 @@ function initControlPanel(layer) {
 
   };
   ol.inherits(controlPanel, ol.control.Control);
-
+}

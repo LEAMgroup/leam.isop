@@ -146,19 +146,25 @@ class addPlan(BrowserView):
 class addLayer(BrowserView):
 
     def __call__(self):
-        #import pdb; pdb.set_trace()
 
         try:
-            title = splitext(self.request.form['file'].filename)[0]
+            filename = self.request.form['file'].filename
+            title = splitext(filename)[0]
         except KeyError:
             return self.request.response.redirect(self.context.absolute_url())
 
-        obj = api.content.create(
+        simmap = api.content.create(
+                container=aq_inner(self.context),
                 type='SimMap', 
                 title=title,
-                container=aq_inner(self.context),
+                id = filename.decode('utf-8').lower(),
+                save_id = True,
                 )
-        return self.request.response.redirect(obj.absolute_url()+'/edit')
+        
+        with open(self.request.form['file'].name) as f:
+            simmap.setSimImage(f.read(), filename=filename)
+
+        return self.request.response.redirect(simmap.absolute_url()+'/edit')
 
 
 # default view class

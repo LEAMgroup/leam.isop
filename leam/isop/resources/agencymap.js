@@ -121,3 +121,44 @@ function initControlPanel(layer) {
   };
   ol.inherits(controlPanel, ol.control.Control);
 }
+
+var SimMap = (function(jq, ol) {
+  var layers = {};
+
+  return {
+    init: function(sm_class) {
+      jq(sm_class).each(function() {
+        var url = jq(this).attr('src');
+        if (!(url in layers)) {
+          layers[url] = '';
+          jq.getJSON(
+            url + '/getMapMeta',
+            function(data) {
+              layers[url] = data;
+              SimMap.addLayer(url, false);
+            }
+          );
+        };
+      });
+    },
+
+    addLayer: function(url, vis) {
+      layers[url].layer = new ol.layer.Image({
+        source: new ol.source.ImageWMS({
+          url: layers[url]['mapserve'],
+          params: {
+            'MAP': layers[url]['mappath'],
+            'LAYERS': 'final4',
+            'TRANSPARENT' : true,
+          },
+        }),
+        visible: vis,
+      });
+      map.addLayer(layers[url].layer);
+    },
+
+    toggleLayer: function(url) {
+      layers[url].layer.setVisible(!layers[url].layer.getVisible());
+    },
+  };
+}(jQuery, ol));

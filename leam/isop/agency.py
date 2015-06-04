@@ -13,7 +13,7 @@ from Acquisition import aq_inner
 from plone import api
 from plone.dexterity.content import Container
 
-from plone.app.textfield import RichText
+from plone.app.textfield import RichText, RichTextValue
 from plone.namedfile.field import NamedImage, NamedFile
 from plone.namedfile.field import NamedBlobImage, NamedBlobFile
 from plone.namedfile.interfaces import IImageScaleTraversable
@@ -28,7 +28,8 @@ from plone.dexterity.browser.view import DefaultView
 
 from leam.isop import MessageFactory as _
 
-from leam.isop.plan import IPlan, plan_types
+from leam.isop.plan import IPlan
+from leam.isop.plan import plan_types as _plan_types
 from leam.simmap.interfaces import ISimMap
 
 # Interface class; used to define content-type schema.
@@ -98,6 +99,15 @@ class Agency(Container):
         except AttributeError, IndexError:
             return 0.0
 
+    @property
+    def templates(self):
+        """return the GIS templates folder"""
+        templates = api.content.find(id='gistemplates')
+        if len(templates): 
+            return aq_inner(templates[0].getObject())
+        else:
+            return None
+
     def plan_count(self):
         """ return the number of primary plans in the agency """
 
@@ -117,7 +127,6 @@ class Agency(Container):
         return len(results)
 
 
-
 class addPlan(BrowserView):
     """ addPlan view is intended as an ajax call based on a file upload form
         created by dropzone.js. Rending this view directly quietly redirects
@@ -126,45 +135,62 @@ class addPlan(BrowserView):
 
     def __call__(self):
 
-        try:
-            title = splitext(self.request.form['file'].filename)[0]
-        except KeyError:
-            return self.request.response.redirect(self.context.absolute_url())
+        context = aq_inner(self.context)
+
+        title = self.request.form['plan-title']
+        plantype = self.request.form['plan-type']
 
         obj = api.content.create(
+                container=context,
                 type='leam.isop.plan', 
                 title=title,
-                container=aq_inner(self.context),
+                safe_id = True,
                 )
+
+        obj.plantype = plantype
+
+        obj.synopsis = RichTextValue(
+                raw=u'<a href="%s">Click to edit Plan '
+                    'data and add a plan synopsis.</a>' % 
+                    (obj.absolute_url()+'/edit'),
+                mimeType='text/html',
+                outputMimeType='text/html')
+
         obj.document = plone.namedfile.file.NamedBlobFile(
                 filename=self.request.form['file'].filename.decode('utf-8'))
         obj.document._blob.consumeFile(self.request.form['file'].name)
 
-        return self.request.response.redirect(obj.absolute_url()+'/edit')
+        api.content.transition(obj=obj, transition='submit')
+
+        return self.request.response.redirect(context.absolute_url())
 
 
 class addLayer(BrowserView):
 
     def __call__(self):
 
-        try:
-            filename = self.request.form['file'].filename
-            title = splitext(filename)[0]
-        except KeyError:
-            return self.request.response.redirect(self.context.absolute_url())
+        context = aq_inner(self.context)
+
+        title = self.request.form['layer-title']
+        gistype = self.request.form['layer-type']
+        filename = self.request.form['file'].filename
 
         simmap = api.content.create(
-                container=aq_inner(self.context),
+                container=context,
                 type='SimMap', 
                 title=title,
-                id = filename.decode('utf-8').lower(),
-                save_id = True,
+                safe_id = True,
                 )
-        
+
         with open(self.request.form['file'].name) as f:
             simmap.setSimImage(f.read(), filename=filename)
 
-        return self.request.response.redirect(simmap.absolute_url()+'/edit')
+        mapfile = context.templates[gistype].getMapFile()
+        simmap.setMapFile(mapfile, filename=mapfile.filename)
+
+        api.content.transition(obj=simmap, transition='submit')
+
+        return self.request.response.redirect(simmap.absolute_url())
 
 
 # default view class
@@ -185,14 +211,33 @@ class AgencyView(DefaultView):
 
     def plans(self):
         """ return all plans in the agency """
-        results = api.content.find(context=self.context, object_provides=IPlan)
+        results = api.content.find(context=self.context, 
+                object_provides=IPlan)
         return [p.getObject() for p in results]
 
     def maps(self):
         """ return all maps in the agency """
         results =  api.content.find(context=self.context, 
                 object_provides=ISimMap)
-        return [p.getObject() for p in results]
+        return [m.getObject() for m in results]
+
+    def plan_types(self):
+        return [{'value': term.value, 'token':term.token, 'title':term.title}
+                for term in _plan_types]
+
+    def layer_types(self):
+        """ return list of SimMaps from the template folder """
+
+        # TODO: the page template should probably use getPath instead 
+        # of getId. With getId the assumption is that the id is from 
+        # the one and only templates folder.
+        results = api.content.find(
+                context=self.context.templates, 
+                object_provides=ISimMap
+                )
+
+        return [{'id':m.getId(), 'path':m.getPath(), 'title':m.Title()} 
+                for m in results ]
 
 
 class AgencyStats(BrowserView):
@@ -203,7 +248,6 @@ class AgencyStats(BrowserView):
         return len(api.content.find(context=context, object_provides=IPlan))
 
     def __call__(self):
-        #import pdb; pdb.set_trace()
 
         stats = []
         agencies = api.content.find(context=api.portal.get(),
@@ -219,4 +263,22 @@ class AgencyStats(BrowserView):
 
         self.request.response.setHeader('content-type', 'application/json')
         return json.dumps(stats)
+
+
+def agencyCreated(context, event):
+    """creation event"""
+    import pdb; pdb.set_trace()
+
+    group = api.group.get(groupname=context.getId())
+    if not group:
+        group = api.group.create(
+                groupname=context.id,
+                title=context.title,
+                description="automatically generated group for agency",
+                roles=['Reader'],
+                )
+
+    context.manage_setLocalRoles(group.getGroupName(), 
+            ('Contributor', 'Editor'))
+    context.reindexObjectSecurity()
 

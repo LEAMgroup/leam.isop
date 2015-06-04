@@ -14,6 +14,9 @@ Warning! This template assumes that bootstrap 3 grid system is available.
 
 <metal:slot fill-slot="style_slot">
   <link rel="stylesheet" class="required"
+        tal:define="navroot context/@@plone_portal_state/navigation_root_url"
+        tal:attributes="href string:${navroot}/++resource++leam.isop/bootstrap-dialog.min.css">
+  <link rel="stylesheet" class="required"
         href="http://openlayers.org/en/v3.4.0/css/ol.css" >
   <link rel="stylesheet" class="required"
         tal:define="navroot context/@@plone_portal_state/navigation_root_url"
@@ -95,9 +98,14 @@ Warning! This template assumes that bootstrap 3 grid system is available.
         <div class="row" tal:repeat="p view/plans">
           <div class="col-md-3"><p tal:content="p/plantype">Type</p></div>
           <div class="col-md-5" ><p tal:content="p/title">Title</p></div>
-          <div class="col-md-2">
+          <div class="col-md-4">
             <a href="#" class="btn btn-xs btn-default" data-toggle="modal"
               tal:attributes="data-target string: #${p/id};">Synopsis</a>
+            <a href="" role="button" class="btn btn-xs btn-primary"
+            tal:attributes="href string:${p/absolute_url}/@@download/document;"
+             >Download</a>
+
+           <!-- plan added modal -->
             <div class="modal fade" id="##" tabindex="-1" role="dialog"
               tal:attributes="id p/id;
                               aria-labelledby p/id;" aria-hidden="true">
@@ -108,19 +116,14 @@ Warning! This template assumes that bootstrap 3 grid system is available.
                       data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title" >Synopsis</h4>
                   </div>
-                  <div class="modal-body" 
-                    tal:condition="nocall: p/summary/output"
-                    tal:content="structure p/summary/output">
-                    synopsis text
+                  <div class="modal-body">
+                    <div tal:content="structure p/summary/output">
+                      synopsis text
+                    </div>
                   </div>
                 </div> <!-- .modal-content -->
               </div> <!-- .modal-dialog -->
             </div> <!-- .modal -->
-          </div>
-          <div class="col-md-2">
-            <a href="" role="button" class="btn btn-xs btn-primary"
-            tal:attributes="href string:${p/absolute_url}/@@download/document;"
-              data-toggle="modal">Download</a>
           </div>
         </div>
 
@@ -128,9 +131,39 @@ Warning! This template assumes that bootstrap 3 grid system is available.
         <div class="row top-margin-05" tal:condition="view/canManage">
           <div id="add-plan" class="col-md-12 dropzone-previews">
             <div class="dz-message">
-              Drop a PDF (or click here) to add a new plan.</div>
+              Drop (or click) a PDF to add a new plan.</div>
           </div>
         </div>
+
+        <!-- plan metadata modal -->
+        <div id="plan-modal" class="modal fade" 
+          tabindex="-1" role="dialog">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">Upload Plan</h4>
+              </div>
+              <div class="modal-body">
+                <form id="new-plan-form">
+                  <h4>Title:</h4>
+                  <input type="text" id="plan-title" size="65"/><br>
+                  <h4>Type:</h4>
+                  <select id="plan-type">
+                    <option tal:repeat="t view/plan_types"
+                            tal:attributes="value t/token" 
+                            tal:content="t/title">Title</option>
+                  </select>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="plan-close btn btn-default">
+                  Cancel</button>
+                <button type="button" class="plan-upload btn btn-primary">
+                  Upload</button>
+              </div>
+            </div>
+          </div>
+        </div> <!-- end modal -->
 
         <!-- existing maps -->
         <div class="row top-margin-10">
@@ -150,9 +183,38 @@ Warning! This template assumes that bootstrap 3 grid system is available.
         <div class="row top-margin-05" tal:condition="view/canManage">
           <div id="add-layer" class="col-md-12 dropzone-previews">
             <div class="dz-message">
-              Drop a GIS layer (or click) to add a new map.</div>
+              Drop (or click) a zipfile to add a GIS layer.</div>
           </div>
         </div>
+
+        <div id="layer-modal" class="modal fade" 
+          tabindex="-1" role="dialog">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h4 class="modal-title">Upload GIS Layer</h4>
+              </div>
+              <div class="modal-body">
+                <form id="new-layer-form">
+                  <h4>Title:</h4>
+                  <input type="text" id="layer-title" size="65"/><br>
+                  <h4>Type:</h4>
+                  <select id="layer-type">
+                    <option tal:repeat="t view/layer_types"
+                            tal:attributes="value t/id" 
+                            tal:content="t/title">Title</option>
+                  </select>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="layer-close btn btn-default">
+                  Cancel</button>
+                <button type="button" class="layer-upload btn btn-primary">
+                  Upload</button>
+              </div>
+            </div>
+          </div>
+        </div> <!-- end modal -->
 
       </div> <!-- end right column -->
     </div>
@@ -165,10 +227,10 @@ Warning! This template assumes that bootstrap 3 grid system is available.
       </div>
     </div>
 
-    <script type="text/javascript" 
-        src="++resource++leam.isop/agencymap.js"></script>
     <script type="text/javascript"
         src="++resource++leam.isop/agency_dropzone.js"></script>
+    <script type="text/javascript" 
+        src="++resource++leam.isop/agencymap.js"></script>
     <script type="text/javascript">
 
       map.getView().setCenter( getLongLat() );
@@ -181,6 +243,7 @@ Warning! This template assumes that bootstrap 3 grid system is available.
           console.log("toggle layer visibility on " + this.src);
           SimMap.toggleLayer(this.src);
       });
+
     </script>
 
   </metal:content-core>

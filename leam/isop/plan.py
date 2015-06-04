@@ -59,10 +59,9 @@ class IPlan(model.Schema, IImageScaleTraversable):
             vocabulary = plan_types,
             required = True,
             )
-    summary = RichText(
+    synopsis = RichText(
             title = _(u'Summary'),
-            description = _(u'A brief summary of the plan including purpose '
-                    u'and key goals.'),
+            description = _(u'Plan synopsis including purpose and key goals.'),
             required = False,
             )
     cover = NamedBlobImage(

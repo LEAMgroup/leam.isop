@@ -1,24 +1,25 @@
       var agencyList = function() {
         var panel = document.createDocumentFragment();
-        var table = document.createElement("table");
+        var table = document.createElement("div");
         table.setAttribute("class", "agency-control");
         panel.appendChild(table);
-        var row = document.createElement("tr");
-        row.innerHTML = '<th class="span3">Agency</th>' +
-            '<th class="span1">Plans</th><th class="span1">Maps</th>';
+        var row = document.createElement("div");
+        row.className = 'row';
+        row.innerHTML = '<span class="col-md-7">Partner</span>' +
+                        '<span class="col-md-3">Plans</span>' +
+                        '<span class="col-md-1">Maps</span>';
         table.appendChild(row);
 
         var f = this.getFeatures();
         for (var i=0; i<f.length; i++) {
           console.log("agency="+f[i].get('name')+" url="+f[i].get('url'));
-          var arr = [
-            '<a href="' + f[i].get('url') + '" class="agency-name">' + 
-                 f[i].get('name') + "</a>",
-            f[i].get('plans') + " of 5",
-            f[i].get('maps'),
-          ];
-          var row = document.createElement("tr");
-          row.innerHTML = "<td>" + arr.join("</td><td>") + "</td>";
+          row = document.createElement("div");
+          row.className = 'row';
+          row.innerHTML = '<a href="' + f[i].get('url') + 
+              '" class="agency-name col-md-7">' + f[i].get('name') + '</a>' +
+              '<span class="col-md-3">' + f[i].get('plans') + ' of 5</span>' +
+              '<span class="col-md-1">' + f[i].get('maps') + '</span>';
+
           table.appendChild(row);
         };
         document.getElementById('controlp').appendChild(panel);

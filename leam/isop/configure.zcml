@@ -115,4 +115,9 @@
         permission="zope2.View"
         />
 
+    <subscriber
+        for=".agency.IAgency zope.lifecycleevent.IObjectAddedEvent"
+        handler=".agency.agencyCreated"
+        />
+
 </configure>

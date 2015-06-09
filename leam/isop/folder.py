@@ -16,9 +16,14 @@ class AgencyMapView(BrowserView):
 
     def plans(self):
         """ return all plans in the agency """
+        #import pdb; pdb.set_trace()
 
         results = api.content.find(context=self.context, object_provides=IPlan)
-        return [p.getObject() for p in results]
+        return [{'title': p.Title(),
+                 'url': p.getURL(),
+                 'agency': p.getObject().getParentNode().Title(),
+                 'plantype': p.getObject().plantype,
+                } for p in results]
 
 
 class AgencyLocations(BrowserView):

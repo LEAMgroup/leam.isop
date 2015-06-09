@@ -190,7 +190,7 @@ class addLayer(BrowserView):
 
         api.content.transition(obj=simmap, transition='submit')
 
-        return self.request.response.redirect(simmap.absolute_url())
+        return self.request.response.redirect(context.absolute_url())
 
 
 # default view class

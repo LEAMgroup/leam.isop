@@ -1,5 +1,6 @@
 from os.path import splitext
 import json
+from geopy.geocoders import Nominatim
 
 from z3c.form import group, field
 from zope import schema
@@ -267,8 +268,9 @@ class AgencyStats(BrowserView):
 
 def agencyCreated(context, event):
     """creation event"""
-    import pdb; pdb.set_trace()
+    #import pdb; pdb.set_trace()
 
+    # create an administrative group 
     group = api.group.get(groupname=context.getId())
     if not group:
         group = api.group.create(
@@ -276,9 +278,19 @@ def agencyCreated(context, event):
                 title=context.title,
                 description="automatically generated group for agency",
                 roles=['Reader'],
-                )
+        )
 
+    # give group ability to modify agency
     context.manage_setLocalRoles(group.getGroupName(), 
             ('Contributor', 'Editor'))
     context.reindexObjectSecurity()
+
+    # attempt to geocode based on address
+    geolocator = Nominatim()
+    location = geolocator.geocode("%s, %s, %s" % (context.address, 
+        context.city, context.state))
+    if location:
+        context.location = "%s, %s" % (location.latitude, location.longitude)
+    else:
+        context.location = "38.00, -91.00"
 

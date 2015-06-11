@@ -14,9 +14,6 @@ Warning! This template assumes that bootstrap 3 grid system is available.
 
 <metal:slot fill-slot="style_slot">
   <link rel="stylesheet" class="required"
-        tal:define="navroot context/@@plone_portal_state/navigation_root_url"
-        tal:attributes="href string:${navroot}/++resource++leam.isop/bootstrap-dialog.min.css">
-  <link rel="stylesheet" class="required"
         href="http://openlayers.org/en/v3.4.0/css/ol.css" >
   <link rel="stylesheet" class="required"
         tal:define="navroot context/@@plone_portal_state/navigation_root_url"
@@ -54,15 +51,16 @@ Warning! This template assumes that bootstrap 3 grid system is available.
     <div class="row top-margin-20">
       <div class="col-md-6">
         <div class="row">
-          <div class="col-md-3"><h4>Web Site</h4></div>
+          <div class="col-md-3"><h4 class="field-label">Web Site</h4></div>
           <div class="col-md-8">
-            <p><a tal:attributes="href context/website"
+            <p class="field-value"><a tal:attributes="href context/website"
               tal:content="context/website">http://localhost/dev</a></p>
           </div>
         </div>
         <div class="row">
-          <div class="col-md-3"><h4>Address</h4></div>
-          <div class="col-md-8"><p><span tal:replace="context/address">
+          <div class="col-md-3"><h4 class="field-label">Address</h4></div>
+          <div class="col-md-8"><p class="field-value">
+            <span tal:replace="context/address">
               street address</span><br>
             <span tal:replace="context/city">City</span>, 
             <span tal:replace="context/state">XX </span>
@@ -70,19 +68,20 @@ Warning! This template assumes that bootstrap 3 grid system is available.
             </p></div>
         </div>
         <div class="row">
-          <div class="col-md-3"><h4>Phone</h4></div>
-          <div class="col-md-8"><p tal:content="context/phone">
-            555-555-5555</p></div>
+          <div class="col-md-3"><h4 class="field-label">Phone</h4></div>
+          <div class="col-md-8"><p class="field-value" 
+            tal:content="context/phone">555-555-5555</p></div>
         </div>
         <div class="row">
-          <div class="col-md-3"><h4>Email</h4></div>
-          <div class="col-md-8"><p tal:content="context/email">
-            info@agency.gov</p></div>
+          <div class="col-md-3"><h4 class="field-label">Email</h4></div>
+          <div class="col-md-8"><p class="field-value" 
+            tal:content="context/email">info@agency.gov</p></div>
         </div>
         <div class="row" tal:condition="nocall:context/overview">
-          <div class="col-md-3"><h4>Overview</h4></div>
+          <div class="col-md-3"><h4 class="field-label">Overview</h4></div>
           <div class="col-md-8">
-            <div tal:replace="structure context/overview/output">overview</div>
+            <div class="field-value" 
+              tal:replace="structure context/overview/output">overview</div>
           </div>
         </div>
       </div>

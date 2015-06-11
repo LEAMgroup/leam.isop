@@ -237,7 +237,7 @@ class AgencyView(DefaultView):
                 object_provides=ISimMap
                 )
 
-        return [{'id':m.getId(), 'path':m.getPath(), 'title':m.Title()} 
+        return [{'id':m.getId, 'path':m.getPath(), 'title':m.Title} 
                 for m in results ]
 
 

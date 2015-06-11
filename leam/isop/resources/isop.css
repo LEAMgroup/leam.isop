@@ -36,3 +36,8 @@
   border-radius: 3px;
   background-color: lightblue;
 }
+
+.field-label, .field-value {
+  margin-top: 10px;
+}
+

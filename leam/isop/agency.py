@@ -1,6 +1,6 @@
 from os.path import splitext
 import json
-from geopy.geocoders import Nominatim
+from pygeocoder import Geocoder, GeocoderError
 
 from z3c.form import group, field
 from zope import schema
@@ -126,6 +126,23 @@ class Agency(Container):
 
         results = api.content.find(context=self, object_provides=ISimMap)
         return len(results)
+
+    def geocode(self):
+        """ set location field using geocoding service """
+
+        try:
+            r = Geocoder.geocode("%s, %s, %s" % (self.address, 
+                    self.city, self.state))
+
+        # TODO: set default location?
+        except GeocoderError as e:
+            self.location = ""
+
+        except Exception as e:
+            pass
+
+        else:
+            self.location = "%s, %s" % r[0].coordinates
 
 
 class addPlan(BrowserView):
@@ -268,7 +285,10 @@ class AgencyStats(BrowserView):
 
 def agencyCreated(context, event):
     """creation event"""
-    #import pdb; pdb.set_trace()
+    import pdb; pdb.set_trace()
+
+    # attempt to geocode based on address
+    context.geocode()
 
     # create an administrative group 
     group = api.group.get(groupname=context.getId())
@@ -285,12 +305,4 @@ def agencyCreated(context, event):
             ('Contributor', 'Editor'))
     context.reindexObjectSecurity()
 
-    # attempt to geocode based on address
-    geolocator = Nominatim()
-    location = geolocator.geocode("%s, %s, %s" % (context.address, 
-        context.city, context.state))
-    if location:
-        context.location = "%s, %s" % (location.latitude, location.longitude)
-    else:
-        context.location = "38.00, -91.00"
 

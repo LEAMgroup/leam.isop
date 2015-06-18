@@ -81,7 +81,7 @@ Warning! This template assumes that bootstrap 3 grid system is available.
           <div class="col-md-3"><h4 class="field-label">Overview</h4></div>
           <div class="col-md-8">
             <div class="field-value" 
-              tal:replace="structure context/overview/output">overview</div>
+              tal:content="structure context/overview/output">overview</div>
           </div>
         </div>
       </div>

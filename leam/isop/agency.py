@@ -285,7 +285,6 @@ class AgencyStats(BrowserView):
 
 def agencyCreated(context, event):
     """creation event"""
-    import pdb; pdb.set_trace()
 
     # attempt to geocode based on address
     context.geocode()
